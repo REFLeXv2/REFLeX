@@ -50,19 +50,14 @@ export function Header({ activeSection }: { activeSection: string }) {
   const brandDesktop = lang === 'ar' ? 'عبدالرزاق نبيل' : 'Abdulrazzaq N.'
   const brandMobile = brandDesktop
 
-  const langBtnBase =
-    'inline-flex items-center justify-center rounded-lg px-2.5 text-xs font-semibold leading-none whitespace-nowrap transition-all'
-  const langBtnActive = 'bg-white text-teal-700 shadow-xs dark:bg-slate-900 dark:text-teal-300'
-  const langBtnIdle = 'text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-white'
-
-  const LangSwitcher = ({ compact = false }: { compact?: boolean }) => (
+  const DesktopLangSwitcher = () => (
     <div
-      className={`inline-flex shrink-0 items-center rounded-xl border border-stone-300/70 bg-stone-200/70 p-1 dark:border-slate-700/70 dark:bg-slate-800/80 ${compact ? 'h-8' : 'h-9'}`}
+      className="inline-flex h-9 shrink-0 items-center rounded-xl border border-stone-300/70 bg-stone-200/70 p-1 dark:border-slate-700/70 dark:bg-slate-800/80"
       role="group"
       aria-label="Language"
     >
       {([
-        { code: 'ar' as const, label: <><span className="max-[379px]:hidden">العربية</span><span className="min-[380px]:hidden">عربي</span></> },
+        { code: 'ar' as const, label: 'العربية' },
         { code: 'en' as const, label: 'EN' },
         { code: 'tr' as const, label: 'TR' },
       ]).map((opt) => (
@@ -70,7 +65,38 @@ export function Header({ activeSection }: { activeSection: string }) {
           key={opt.code}
           type="button"
           onClick={() => setLang(opt.code)}
-          className={`${langBtnBase} ${compact ? 'h-6' : 'h-7'} ${lang === opt.code ? langBtnActive : langBtnIdle}`}
+          className={`inline-flex h-7 items-center justify-center whitespace-nowrap rounded-lg px-2.5 text-xs font-semibold leading-none transition-all ${
+            lang === opt.code
+              ? 'bg-white text-teal-700 shadow-xs dark:bg-slate-900 dark:text-teal-300'
+              : 'text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-white'
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  )
+
+  const MobileLangSwitcher = () => (
+    <div
+      className="inline-flex h-8 shrink-0 items-center rounded-lg border border-stone-300/70 bg-stone-200/70 p-0.5 dark:border-slate-700/70 dark:bg-slate-800/80"
+      role="group"
+      aria-label="Language"
+    >
+      {([
+        { code: 'ar' as const, label: 'عربي' },
+        { code: 'en' as const, label: 'EN' },
+        { code: 'tr' as const, label: 'TR' },
+      ]).map((opt) => (
+        <button
+          key={opt.code}
+          type="button"
+          onClick={() => setLang(opt.code)}
+          className={`inline-flex h-7 items-center justify-center whitespace-nowrap rounded-md px-2 text-[11px] font-bold leading-none transition-all ${
+            lang === opt.code
+              ? 'bg-white text-teal-700 shadow-xs dark:bg-slate-900 dark:text-teal-300'
+              : 'text-stone-600 hover:text-stone-900 dark:text-stone-300 dark:hover:text-white'
+          }`}
         >
           {opt.label}
         </button>
@@ -111,7 +137,7 @@ export function Header({ activeSection }: { activeSection: string }) {
         </nav>
 
         <div className="flex items-center gap-2.5 justify-self-end">
-          <LangSwitcher />
+          <DesktopLangSwitcher />
           <button
             type="button"
             onClick={toggleTheme}
@@ -133,35 +159,27 @@ export function Header({ activeSection }: { activeSection: string }) {
       </div>
 
       {/* Mobile */}
-      <div className="mx-auto max-w-7xl px-3 md:hidden">
-        <div className="flex h-14 items-center justify-between gap-2">
-          <div className="min-w-0">
+      <div className="md:hidden">
+        <div className="flex h-[52px] items-center justify-between gap-2 px-3">
+          <div className="min-w-0 flex-1">
             <span className="block truncate text-sm font-bold leading-none text-stone-900 dark:text-[var(--color-ink-dark)]">
               {brandMobile}
             </span>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
-            <LangSwitcher compact />
+            <MobileLangSwitcher />
             <button
               type="button"
               onClick={toggleTheme}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-stone-300/70 bg-stone-200/70 text-stone-700 transition-all active:scale-95 dark:border-slate-700/70 dark:bg-slate-800/80 dark:text-stone-200"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-stone-300/70 bg-stone-200/70 text-stone-700 transition-all active:scale-95 dark:border-slate-700/70 dark:bg-slate-800/80 dark:text-stone-200"
               aria-label={theme === 'light' ? t(ui.themeDark, lang) : t(ui.themeLight, lang)}
             >
               {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
             </button>
-            <button
-              type="button"
-              onClick={() => scrollToId('contact')}
-              className="inline-flex h-8 items-center gap-1 rounded-lg border border-teal-600/30 bg-teal-600/15 px-2.5 text-xs font-semibold leading-none text-teal-700 transition-all active:scale-95 dark:text-teal-300"
-            >
-              <span className="whitespace-nowrap">{t(ui.contactMe, lang)}</span>
-              <ArrowUpRight size={13} />
-            </button>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-1.5 overflow-x-auto border-t border-stone-300/50 py-1.5 [scrollbar-width:none] dark:border-slate-800/70 [&::-webkit-scrollbar]:hidden">
+        <div className="grid grid-cols-4 gap-1 border-t border-stone-300/50 px-3 py-1.5 dark:border-slate-800/70">
           {nav.map((item) => {
             const active = activeSection === item.id
             return (
@@ -169,10 +187,10 @@ export function Header({ activeSection }: { activeSection: string }) {
                 key={item.id}
                 type="button"
                 onClick={() => scrollToId(item.id)}
-                className={`inline-flex h-8 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-semibold leading-none transition-all ${
+                className={`flex h-7 items-center justify-center truncate rounded-md px-1 text-xs font-medium leading-none transition-all ${
                   active
                     ? 'bg-[var(--color-accent)] text-white'
-                    : 'border border-stone-300/60 bg-stone-200/50 text-stone-700 dark:border-slate-700/60 dark:bg-slate-800/50 dark:text-stone-200'
+                    : 'bg-stone-200/50 text-stone-700 dark:bg-slate-800/50 dark:text-stone-200'
                 }`}
               >
                 {item.label}
